@@ -31,24 +31,24 @@ new class extends Component
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        <i class="fa-solid fa-house me-1"></i> {{ __('Dashboard') }}
                     </x-nav-link>
                     <!-- Navigation Karyawan -->
                     @if(auth()->user()->role === 'admin')
                         <x-nav-link :href="route('employee.index')" :active="request()->routeIs('employee.index')" wire:navigate>
-                            {{ __('Karyawan') }}
+                            <i class="fa-solid fa-user-group me-1"></i> {{ __('Karyawan') }}
                         </x-nav-link>
                         <x-nav-link :href="route('employee.edit')" :active="request()->routeIs('employee.edit')" wire:navigate>
-                            {{ __('Kelola Karyawan') }}
+                            <i class="fa-solid fa-user-gear me-1"></i> {{ __('Kelola Karyawan') }}
                         </x-nav-link>
                         <!-- Navigation Kalkulator Penggajian -->
                         <x-nav-link :href="route('payroll.calculator')" :active="request()->routeIs('payroll.calculator')" wire:navigate>
-                            {{ __('Kalkulator Penggajian') }}
+                            <i class="fa-solid fa-calculator me-1"></i> {{ __('Kalkulator Penggajian') }}
                         </x-nav-link>
                     @endif
                     <!-- Navigation Riwayat Gaji -->
                     <x-nav-link :href="route('payroll.history')" :active="request()->routeIs('payroll.history')" wire:navigate>
-                        {{ __('Riwayat Gaji') }}
+                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Riwayat Gaji') }}
                     </x-nav-link>
                 </div>
             </div>
