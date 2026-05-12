@@ -52,12 +52,10 @@ new class extends Component
                             <i class="fa-solid fa-list-check me-1"></i> {{ __('Semua Riwayat Gaji') }}
                         </x-nav-link>
                     @endif
-                    <!-- Navigation Slip Gaji Saya (User Role Only) -->
-                    @if(auth()->user()->role === 'user')
-                        <x-nav-link :href="route('my.payslips')" :active="request()->routeIs('my.payslips')" wire:navigate>
-                            <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Slip Gaji Saya') }}
-                        </x-nav-link>
-                    @endif
+                    <!-- Navigation Slip Gaji Saya (User/Personal) -->
+                    <x-nav-link :href="route('my.payslips')" :active="request()->routeIs('my.payslips')" wire:navigate>
+                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Slip Gaji Saya') }}
+                    </x-nav-link>
                 </div>
             </div>
 

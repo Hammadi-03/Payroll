@@ -51,18 +51,18 @@
 
                             <div class="flex flex-col gap-4">
                                 @if(!$todayAttendance || !$todayAttendance->check_in)
-                                    <button wire:click="checkIn" class="btn-glossy-blue w-full">
+                                    <button wire:click="checkIn" class="w-full py-4 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-bold transition flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-clock"></i> Check In
                                     </button>
                                 @elseif(!$todayAttendance->check_out)
                                     <div class="mb-2 text-sm text-green-600 font-bold">
                                         <i class="fa-solid fa-check-circle"></i> Checked In at {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('H:i') }}
                                     </div>
-                                    <button wire:click="checkOut" class="btn-glossy-white w-full">
+                                    <button wire:click="checkOut" class="w-full py-4 bg-white border-2 border-indigo-700 text-indigo-700 hover:bg-indigo-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-clock-rotate-left"></i> Check Out
                                     </button>
                                 @else
-                                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner">
+                                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                         <p class="text-gray-500 text-sm">Today's Work Finished</p>
                                         <div class="text-indigo-900 font-bold mt-1">
                                             {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('H:i') }} - {{ \Carbon\Carbon::parse($todayAttendance->check_out)->format('H:i') }}
@@ -138,7 +138,7 @@
                     <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-xl font-bold text-gray-800">Yearly Summary</h3>
-                            <button class="btn-glossy-blue">
+                            <button class="px-4 py-2 bg-indigo-900 text-white rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-black transition">
                                 Annual Statement <i class="fa-solid fa-file-pdf"></i>
                             </button>
                         </div>

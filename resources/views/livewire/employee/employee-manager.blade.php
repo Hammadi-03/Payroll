@@ -56,17 +56,20 @@
                 @error('address') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex gap-4 mt-6">
                 <button type="submit"
                     wire:loading.attr="disabled"
-                    class="flex-1 bg-blue-600 text-white font-bold py-2 rounded shadow disabled:opacity-50">
+                    class="flex-1 flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-md transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50">
+                    <i class="fa-solid fa-save me-2"></i>
                     <span wire:loading.remove>Simpan</span>
                     <span wire:loading>Menyimpan...</span>
                 </button>
                 
                 <!-- Tampilkan tombol Batal HANYA saat Mode Edit menyala -->
                 @if($isEditMode)
-                    <button type="button" wire:click="resetForm" class="flex-1 bg-gray-500 text-white font-bold py-2 rounded shadow">Batal</button>
+                    <button type="button" wire:click="resetForm" class="flex-1 flex items-center justify-center bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 px-6 rounded-full shadow-sm transition-all duration-300">
+                        <i class="fa-solid fa-xmark me-2"></i> Batal
+                    </button>
                 @endif
             </div>
         </form>
@@ -94,12 +97,16 @@
                         <td class="px-4 py-3 font-semibold">{{ $item->name }}</td>
                         <td class="px-4 py-3">{{ $item->position }}</td>
                         <td class="px-4 py-3">{{ $item->address }}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 flex gap-2">
                             <!-- Memanggil fungsi public yg ada di komponen PHP, disertai Parameter lemparan ID -->
-                            <button wire:click="edit({{ $item->id }})" class="text-indigo-600 hover:underline mr-2">Edit</button>
+                            <button wire:click="edit({{ $item->id }})" class="inline-flex items-center px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full transition-colors">
+                                <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                            </button>
                             
                             <!-- Menggunakan bawaan Javascript confirm Dialog untuk keamanan sebelum Delete -->
-                            <button wire:click="delete({{ $item->id }})" wire:confirm="Yakin ingin menghapus karyawan ini?" class="text-red-600 hover:underline">Hapus</button>
+                            <button wire:click="delete({{ $item->id }})" wire:confirm="Yakin ingin menghapus karyawan ini?" class="inline-flex items-center px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-full transition-colors">
+                                <i class="fa-solid fa-trash me-1"></i> Hapus
+                            </button>
                         </td>
                     </tr>
                 @empty
