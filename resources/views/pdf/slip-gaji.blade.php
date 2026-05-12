@@ -33,7 +33,7 @@
     <table class="header-table">
         <tr>
             <td style="width: 50%; text-align: left; color: #555; font-size: 12px; font-weight: bold; padding-top: 10px;">
-                Dibuat oleh sistem HR MurjanLab<br>
+                Dibuat oleh sistem HR Akses Cepat<br>
                 {{ now()->format('Y-m-d') }}
             </td>
             <td style="width: 50%; text-align: right;">
@@ -41,7 +41,7 @@
                     <tr>
                         <td style="text-align: right; border: none; vertical-align: middle; padding-right: 15px;">
                             <div class="logo-subtext">Enablement</div>
-                            <div class="logo-text">MurjanLab.inc - Indonesia</div>
+                            <div class="logo-text">Akses Cepat - Indonesia</div>
                             <div class="logo-subtext">Jakarta</div>
                         </td>
                         <td style="width: 50px; border: none; vertical-align: middle; background-color: #274261; padding: 5px; text-align: center;">
