@@ -34,16 +34,18 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <!-- Navigation Karyawan -->
-                    <x-nav-link :href="route('employee.index')" :active="request()->routeIs('employee.index')" wire:navigate>
-                        {{ __('Karyawan') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('employee.edit')" :active="request()->routeIs('employee.edit')" wire:navigate>
-                        {{ __('Kelola Karyawan') }}
-                    </x-nav-link>
-                    <!-- Navigation Kalkulator Penggajian -->
-                    <x-nav-link :href="route('payroll.calculator')" :active="request()->routeIs('payroll.calculator')" wire:navigate>
-                        {{ __('Kalkulator Penggajian') }}
-                    </x-nav-link>
+                    @if(auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('employee.index')" :active="request()->routeIs('employee.index')" wire:navigate>
+                            {{ __('Karyawan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('employee.edit')" :active="request()->routeIs('employee.edit')" wire:navigate>
+                            {{ __('Kelola Karyawan') }}
+                        </x-nav-link>
+                        <!-- Navigation Kalkulator Penggajian -->
+                        <x-nav-link :href="route('payroll.calculator')" :active="request()->routeIs('payroll.calculator')" wire:navigate>
+                            {{ __('Kalkulator Penggajian') }}
+                        </x-nav-link>
+                    @endif
                     <!-- Navigation Riwayat Gaji -->
                     <x-nav-link :href="route('payroll.history')" :active="request()->routeIs('payroll.history')" wire:navigate>
                         {{ __('Riwayat Gaji') }}

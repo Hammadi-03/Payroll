@@ -16,15 +16,20 @@ Route::view('profile', 'profile')
 
 //✅ Route ini HANYA bisa diakses jika sudah login
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('employee', 'livewire.employee.index')->name('employee.index');
-    Route::get('editkaryawan', \App\Livewire\Employee\EmployeeManager::class)->name('employee.edit');
-    Route::get('/payroll', \App\Livewire\Calculator\PayrollCalculator::class)->name('payroll.calculator');
+    // Admin Only
+    Route::middleware(['role:admin'])->group(function () {
+        Route::view('employee', 'livewire.employee.index')->name('employee.index');
+        Route::get('editkaryawan', \App\Livewire\Employee\EmployeeManager::class)->name('employee.edit');
+        Route::get('/payroll', \App\Livewire\Calculator\PayrollCalculator::class)->name('payroll.calculator');
+    });
+
+    // Both Admin and User
     Route::get('/payroll-history', \App\Livewire\Payrol\PayrollHistory::class)->name('payroll.history');
     Route::get('/cetak-slip/{id}', function ($id) {
-    $payroll = Payroll::with('employee')->findOrFail($id);
-    $pdf = Pdf::loadView('pdf.slip-gaji', ['data' => $payroll]);
-    return $pdf->stream('Slip_Gaji_' . $payroll->employee->nik . '.pdf');
-})->name('payroll.cetak');
+        $payroll = Payroll::with('employee')->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.slip-gaji', ['data' => $payroll]);
+        return $pdf->stream('Slip_Gaji_' . $payroll->employee->nik . '.pdf');
+    })->name('payroll.cetak');
 });
 
 
