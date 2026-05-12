@@ -1,30 +1,173 @@
 <div>
     @if($role === 'admin')
-        <!-- DASHBOARD ADMIN -->
-        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">
-                <i class="fa-solid fa-chart-line me-2"></i> Overview Dashboard (Admin)
-            </h1>
+        <!-- ═══════════════════════════════ ADMIN DASHBOARD ═══════════════════════════════ -->
+        <div class="min-h-screen bg-gray-50 px-6 py-8">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
-                <!-- Card: Total Karyawan -->
-                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 transition hover:shadow-md">
-                    <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">
-                        <i class="fa-solid fa-users me-1 text-blue-500"></i> Total Karyawan
-                    </h3>
-                    <p class="text-4xl font-extrabold text-gray-800 mt-3">{{ $totalKaryawan }} <span class="text-lg font-normal text-gray-400">Orang</span></p>
+            <!-- ── TOP STAT CARDS ─────────────────────────────────────────── -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+
+                <!-- Card 1: Avg Check-In / Check-Out -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 col-span-1 lg:col-span-1">
+                    <div class="flex items-center gap-2 text-gray-500 text-sm font-medium mb-1">
+                        <i class="fa-regular fa-clock text-indigo-500"></i>
+                        Average Check-In / Out Time
+                    </div>
+                    <p class="text-xs text-gray-400 mb-5">Monitor daily attendance and track workforce performance.</p>
+
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-4xl font-extrabold text-gray-800 tracking-tight">
+                                {{ $avgCheckIn }}
+                                <span class="text-base font-normal text-gray-400">AM</span>
+                            </p>
+                            <p class="text-xs text-gray-400 mt-1">Avg. Today's Check-In Time</p>
+                        </div>
+                        <div>
+                            <p class="text-4xl font-extrabold text-gray-800 tracking-tight">
+                                {{ $avgCheckOut }}
+                                <span class="text-base font-normal text-gray-400">PM</span>
+                            </p>
+                            <p class="text-xs text-gray-400 mt-1">Avg. Today's Check-Out Time</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Card: Gaji Bulan Ini -->
-                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 transition hover:shadow-md">
-                    <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">
-                        <i class="fa-solid fa-money-bill-wave me-1 text-green-500"></i> Gaji Cair Bulan Ini
-                    </h3>
-                    <p class="text-4xl font-extrabold text-gray-800 mt-3">
-                        <span class="text-lg font-bold text-gray-400">Rp</span> {{ number_format($totalGaji, 0, ',', '.') }}
+                <!-- Card 2: On-Time Rate -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center gap-2 text-gray-500 text-sm font-medium mb-1">
+                        <i class="fa-solid fa-circle-check text-green-500"></i>
+                        On-Time Rate
+                    </div>
+                    <p class="text-xs text-gray-400 mb-5">Employees who checked in before 09:00 today.</p>
+
+                    <div class="flex items-end gap-3">
+                        <p class="text-5xl font-extrabold text-gray-800">{{ $onTimeRate }}<span class="text-2xl">%</span></p>
+                        <span class="mb-2 px-2 py-0.5 text-xs font-bold rounded-full
+                            {{ $onTimeRate >= 80 ? 'bg-green-100 text-green-700' : ($onTimeRate >= 50 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-600') }}">
+                            {{ $onTimeRate >= 80 ? 'Good' : ($onTimeRate >= 50 ? 'Average' : 'Low') }}
+                        </span>
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-indigo-50 rounded-xl p-2">
+                            <p class="text-lg font-bold text-indigo-700">{{ $totalKaryawan }}</p>
+                            <p class="text-xs text-gray-400">Total Staff</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-2">
+                            <p class="text-lg font-bold text-green-700">{{ $todayAttendances->filter(fn($a) => $a->check_in)->count() }}</p>
+                            <p class="text-xs text-gray-400">Present</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl p-2">
+                            <p class="text-lg font-bold text-red-500">{{ $totalKaryawan - $todayAttendances->filter(fn($a) => $a->check_in)->count() }}</p>
+                            <p class="text-xs text-gray-400">Absent</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Payroll Insight -->
+                <div class="bg-gradient-to-br from-indigo-600 to-blue-500 rounded-2xl shadow-sm p-6 text-white">
+                    <div class="flex items-center gap-2 text-indigo-100 text-sm font-medium mb-1">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        Payroll Insight
+                    </div>
+                    <p class="text-xs text-indigo-200 mb-5">Total net salary disbursed this month.</p>
+
+                    <p class="text-3xl font-extrabold leading-tight">
+                        Rp {{ number_format($totalGaji, 0, ',', '.') }}
                     </p>
+                    <p class="text-sm text-indigo-200 mt-1">Total Gaji Bulan Ini</p>
+
+                    <div class="mt-6 pt-4 border-t border-indigo-400 flex items-center gap-3">
+                        <i class="fa-solid fa-users text-indigo-200 text-xl"></i>
+                        <div>
+                            <p class="text-lg font-bold">{{ $totalKaryawan }} <span class="text-indigo-200 text-sm font-normal">Karyawan</span></p>
+                            <p class="text-xs text-indigo-300">Active employees in the system</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- ── ATTENDANCE HISTORY TABLE ────────────────────────────────── -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Table Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-5 border-b border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-regular fa-clock text-indigo-600 text-lg"></i>
+                        <h2 class="text-lg font-bold text-gray-800">Check-in/out History</h2>
+                        <span class="ml-2 px-2 py-0.5 text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full">Today</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('employee.edit') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-full transition">
+                            <i class="fa-solid fa-plus"></i> Add Employee
+                        </a>
+                        <a href="{{ route('employee.index') }}"
+                            class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition">
+                            View All
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
+                                <th class="px-6 py-3 text-left">Name</th>
+                                <th class="px-6 py-3 text-left">Position</th>
+                                <th class="px-6 py-3 text-left">Check-in</th>
+                                <th class="px-6 py-3 text-left">Check-out</th>
+                                <th class="px-6 py-3 text-left">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            @forelse($todayAttendances as $att)
+                                @php
+                                    $late    = $att->check_in && $att->check_in > '09:00:00';
+                                    $hasOut  = !is_null($att->check_out);
+                                    $status  = $late ? 'Late Check-In' : ($hasOut ? 'Punctual' : 'On Shift');
+                                    $badgeCls = $late
+                                        ? 'bg-yellow-100 text-yellow-700'
+                                        : ($hasOut ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-600');
+                                @endphp
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm shrink-0">
+                                                {{ strtoupper(substr($att->employee->name ?? '?', 0, 1)) }}
+                                            </div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800 text-sm">{{ $att->employee->name ?? '-' }}</p>
+                                                <p class="text-xs text-gray-400">{{ $att->employee->nik ?? '' }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $att->employee->position ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-gray-700">
+                                        {{ $att->check_in ? \Carbon\Carbon::parse($att->check_in)->format('h:i A') : '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-gray-700">
+                                        {{ $att->check_out ? \Carbon\Carbon::parse($att->check_out)->format('h:i A') : '-' }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-3 py-1 rounded-full text-xs font-bold {{ $badgeCls }}">
+                                            {{ $status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-16 text-center">
+                                        <i class="fa-solid fa-calendar-xmark text-gray-300 text-4xl mb-3"></i>
+                                        <p class="text-gray-400 text-sm">No attendance records for today yet.</p>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     @else
         <!-- DASHBOARD USER (ESS - Employee Self Service) -->

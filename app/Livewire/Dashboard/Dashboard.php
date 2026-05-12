@@ -53,13 +53,42 @@ class Dashboard extends Component
         $user = Auth::user();
 
         if ($user->role === 'admin') {
-            // Data untuk Dashboard Admin
             $periodeBulanini = \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM YYYY');
-            return view('livewire.dashboard.dashboard', [
-                'totalKaryawan' => Employee::count(),
-                'totalGaji' => Payroll::where('month_year', $periodeBulanini)->sum('net_salary'),
-                'role' => 'admin'
-            ])->layout('layouts.app');
+            $totalKaryawan   = Employee::count();
+            $totalGaji       = Payroll::where('month_year', $periodeBulanini)->sum('net_salary');
+
+            // Today's attendance with employee info
+            $todayAttendances = Attendance::with('employee')
+                ->where('date', date('Y-m-d'))
+                ->latest()
+                ->get();
+
+            // Avg check-in / check-out
+            $checkedIn  = $todayAttendances->filter(fn($a) => $a->check_in);
+            $checkedOut = $todayAttendances->filter(fn($a) => $a->check_out);
+
+            $avgCheckIn  = $checkedIn->count()
+                ? \Carbon\Carbon::createFromTimestamp(
+                    $checkedIn->avg(fn($a) => strtotime($a->check_in))
+                  )->format('H:i')
+                : '--:--';
+
+            $avgCheckOut = $checkedOut->count()
+                ? \Carbon\Carbon::createFromTimestamp(
+                    $checkedOut->avg(fn($a) => strtotime($a->check_out))
+                  )->format('H:i')
+                : '--:--';
+
+            // On-time rate (checked in before 09:00)
+            $onTime = $checkedIn->filter(fn($a) => $a->check_in <= '09:00:00')->count();
+            $onTimeRate = $checkedIn->count() > 0
+                ? round(($onTime / $checkedIn->count()) * 100)
+                : 0;
+
+            return view('livewire.dashboard.dashboard', compact(
+                'totalKaryawan', 'totalGaji', 'todayAttendances',
+                'avgCheckIn', 'avgCheckOut', 'onTimeRate'
+            ) + ['role' => 'admin'])->layout('layouts.app');
         } else {
             // Data untuk Dashboard User (ESS)
             $employee = Employee::where('user_id', $user->id)->first();

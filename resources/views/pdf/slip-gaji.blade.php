@@ -41,7 +41,7 @@
                     <tr>
                         <td style="text-align: right; border: none; vertical-align: middle; padding-right: 15px;">
                             <div class="logo-subtext">Enablement</div>
-                            <div class="logo-text">Akses Cepat - Indonesia</div>
+                            <div class="logo-text">PT-SuksessMakmur-MurjanLab - Indonesia</div>
                             <div class="logo-subtext">Jakarta</div>
                         </td>
                         <td style="width: 50px; border: none; vertical-align: middle; background-color: #274261; padding: 5px; text-align: center;">
