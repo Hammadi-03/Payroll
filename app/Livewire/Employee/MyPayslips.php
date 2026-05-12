@@ -5,25 +5,25 @@ namespace App\Livewire\Employee;
 use Livewire\Component;
 use App\Models\Payroll;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Auth;
 
 class MyPayslips extends Component
 {
+    public $selectedEmployee = '';
+
     public function render()
     {
-        // Temukan data karyawan yang tertaut dengan akun user ini
-        $employee = Employee::where('user_id', Auth::id())->first();
+        $employees = Employee::orderBy('name')->get();
 
-        $payrolls = [];
-        if ($employee) {
-            $payrolls = Payroll::where('employee_id', $employee->id)
+        $payrolls = collect();
+        if ($this->selectedEmployee) {
+            $payrolls = Payroll::where('employee_id', $this->selectedEmployee)
                 ->orderBy('id', 'desc')
                 ->get();
         }
 
         return view('livewire.employee.my-payslips', [
-            'payrolls' => $payrolls,
-            'employee' => $employee
+            'employees' => $employees,
+            'payrolls'  => $payrolls,
         ])->layout('layouts.app');
     }
 }
