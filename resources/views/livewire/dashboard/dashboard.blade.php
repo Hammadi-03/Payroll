@@ -38,18 +38,37 @@
                             Quick Check
                         </div>
                         <div class="p-8 text-center">
+                            @if (session()->has('message'))
+                                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm font-bold">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+
                             <!-- Clock using Alpine.js -->
                             <div x-data="{ time: '' }" x-init="time = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' }); setInterval(() => { time = new Date().toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' }) }, 1000)">
                                 <h2 class="text-5xl font-bold text-indigo-900 mb-8" x-text="time"></h2>
                             </div>
 
                             <div class="flex flex-col gap-4">
-                                <button class="w-full py-4 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-bold transition flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-clock"></i> Check In
-                                </button>
-                                <button class="w-full py-4 bg-white border-2 border-indigo-700 text-indigo-700 hover:bg-indigo-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-clock-rotate-left"></i> Check Out
-                                </button>
+                                @if(!$todayAttendance || !$todayAttendance->check_in)
+                                    <button wire:click="checkIn" class="w-full py-4 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-bold transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-clock"></i> Check In
+                                    </button>
+                                @elseif(!$todayAttendance->check_out)
+                                    <div class="mb-2 text-sm text-green-600 font-bold">
+                                        <i class="fa-solid fa-check-circle"></i> Checked In at {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('H:i') }}
+                                    </div>
+                                    <button wire:click="checkOut" class="w-full py-4 bg-white border-2 border-indigo-700 text-indigo-700 hover:bg-indigo-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-clock-rotate-left"></i> Check Out
+                                    </button>
+                                @else
+                                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                        <p class="text-gray-500 text-sm">Today's Work Finished</p>
+                                        <div class="text-indigo-900 font-bold mt-1">
+                                            {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('H:i') }} - {{ \Carbon\Carbon::parse($todayAttendance->check_out)->format('H:i') }}
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="mt-6 pt-6 border-t border-gray-100">
