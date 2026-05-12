@@ -63,12 +63,9 @@
                         <a href="#" class="flex items-center gap-2 text-gray-500 hover:text-indigo-700 transition text-sm">
                             <i class="fa-solid fa-circle-question"></i> Help
                         </a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="flex items-center gap-2 text-gray-500 hover:text-red-600 transition text-sm">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
-                        </form>
+                        <button wire:click="logout" class="flex items-center gap-2 text-gray-500 hover:text-red-600 transition text-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </button>
                     </div>
                 </div>
 

@@ -5,10 +5,17 @@ namespace App\Livewire\Dashboard;
 use Livewire\Component;
 use App\Models\Employee;
 use App\Models\Payroll;
+use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends Component
 {
+    public function logout(Logout $logout): void
+    {
+        $logout();
+        $this->redirect('/', navigate: true);
+    }
+
     public function render()
     {
         $user = Auth::user();
