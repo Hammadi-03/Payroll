@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Both Admin and User
+    Route::get('/my-payslips', \App\Livewire\Employee\MyPayslips::class)->name('my.payslips');
     Route::get('/payroll-history', \App\Livewire\Payrol\PayrollHistory::class)->name('payroll.history');
     Route::get('/cetak-slip/{id}', function ($id) {
         $payroll = Payroll::with('employee')->findOrFail($id);

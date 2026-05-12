@@ -46,9 +46,15 @@ new class extends Component
                             <i class="fa-solid fa-calculator me-1"></i> {{ __('Kalkulator Penggajian') }}
                         </x-nav-link>
                     @endif
-                    <!-- Navigation Riwayat Gaji -->
-                    <x-nav-link :href="route('payroll.history')" :active="request()->routeIs('payroll.history')" wire:navigate>
-                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Riwayat Gaji') }}
+                    <!-- Navigation Riwayat Gaji (Admin) -->
+                    @if(auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('payroll.history')" :active="request()->routeIs('payroll.history')" wire:navigate>
+                            <i class="fa-solid fa-list-check me-1"></i> {{ __('Semua Riwayat Gaji') }}
+                        </x-nav-link>
+                    @endif
+                    <!-- Navigation Slip Gaji Saya (User/Personal) -->
+                    <x-nav-link :href="route('my.payslips')" :active="request()->routeIs('my.payslips')" wire:navigate>
+                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Slip Gaji Saya') }}
                     </x-nav-link>
                 </div>
             </div>
