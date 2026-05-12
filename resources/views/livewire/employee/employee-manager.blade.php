@@ -27,7 +27,7 @@
                 @error('name') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Nomor Induk / NIK</label>
+                <label class="block text-sm font-medium text-gray-700">Nomor Induk / NIK - ID</label>
                 <input type="text" wire:model.blur="nik" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
                 @error('nik') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
             </div>
@@ -42,6 +42,10 @@
                     <option value="">-- Pilih Jabatan --</option>
                     <option value="Staff IT">Staff IT</option>
                     <option value="HRD / Personalia">HRD / Personalia</option>
+                    <option value="Head-Offcier">Head-Offcier</option>
+                    <option value="Hospitality-staff">Hospitalitystaff</option>
+                    <option value="CS-Costumer Service">CS-Costumer Service</option>
+                    <option value="Staff- Kesehatan">Staff- Kesehatan</option>
                     <option value="Keuangan">Keuangan</option>
                 </select>
                 @error('position') <span class="text-xs text-red-500">{{ $message }}</span> @enderror

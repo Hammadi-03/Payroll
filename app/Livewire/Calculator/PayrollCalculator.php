@@ -10,15 +10,15 @@ use Illuminate\Validation\Rule;
 class PayrollCalculator extends Component
 {   
     // Properti untuk menyimpan input dari form
-    public ?int $employee_id = null;
-    public ?int $basic_salary = 0;
-    public ?int $allowance = 0;
-    public ?int $deduction = 0;
+    public $employee_id = null;
+    public $basic_salary = 0;
+    public $allowance = 0;
+    public $deduction = 0;
     public string $month_year = ''; // user pilih sendiri: "April 2026"
 
 
     // Output (dihitung otomatis)
-    public ?int $net_salary = 0;
+    public $net_salary = 0;
 
     public function mount ()
     {
@@ -31,12 +31,20 @@ class PayrollCalculator extends Component
     public function updated($field)
     {
         if (in_array($field,['basic_salary','allowance','deduction'])) {
-            $this->net_salary = max(0, (($this->basic_salary ?? 0) + ($this->allowance ?? 0)) - ($this->deduction ?? 0));
+            $basic = (int) preg_replace('/[^0-9]/', '', $this->basic_salary ?? '0');
+            $allow = (int) preg_replace('/[^0-9]/', '', $this->allowance ?? '0');
+            $deduct = (int) preg_replace('/[^0-9]/', '', $this->deduction ?? '0');
+            $this->net_salary = max(0, ($basic + $allow) - $deduct);
         }
     }
 
     public function savePayroll()
     {
+        // Bersihkan input angka dari format string sebelum divalidasi
+        $this->basic_salary = (int) preg_replace('/[^0-9]/', '', $this->basic_salary ?? '0');
+        $this->allowance = (int) preg_replace('/[^0-9]/', '', $this->allowance ?? '0');
+        $this->deduction = (int) preg_replace('/[^0-9]/', '', $this->deduction ?? '0');
+
         // Validasi Input
         $this->validate([
             'employee_id' =>[
