@@ -54,14 +54,15 @@
                     <p class="text-sm text-gray-500">Take Home Pay (THP)</p>
                     <p class="text-xs text-gray-400">Gaji Pokok + Tunjangan - Potongan</p>
                 </div>
-                <div class="text-3xl font-extrabold text-blue-600">
+                <div class="text-3xl font-extrabold text-[#282939]">
                     Rp {{ number_format($net_salary, 0, ',', '.') }}
                 </div>
             </div>
 
             <button type="submit"
                 wire:loading.attr="disabled"
-                class="w-full flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-md transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50">
+                style="background-color: #282939"
+                class="w-full flex items-center justify-center hover:opacity-90 text-white font-bold py-3 px-6 rounded-full shadow-md transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50">
                 <i class="fa-solid fa-floppy-disk me-2"></i>
                 <span wire:loading.remove>Simpan Slip Gaji</span>
                 <span wire:loading>Menyimpan...</span>

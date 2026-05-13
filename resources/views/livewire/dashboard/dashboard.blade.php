@@ -3,6 +3,30 @@
         <!-- ═══════════════════════════════ ADMIN DASHBOARD ═══════════════════════════════ -->
         <div class="min-h-screen bg-gray-50 px-6 py-8">
 
+            <!-- ── WELCOME CARD ─────────────────────────────────────────── -->
+            <div class="mb-8 p-8 rounded-[2.5rem] bg-[#282939] text-white overflow-hidden relative shadow-2xl">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-bold uppercase tracking-widest text-indigo-200">
+                            System Administrator
+                        </div>
+                        <div class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <h1 class="text-4xl font-extrabold tracking-tight mb-2">
+                        Selamat Datang 👋, <span class="text-indigo-300">{{ Auth::user()->name }}</span>!
+                    </h1>
+                    <p class="text-indigo-100/70 max-w-xl leading-relaxed">
+                        Kelola absensi karyawan, perhitungan payroll, dan pantau performa tim Anda dalam satu dasbor terpadu. 
+                        Hari ini ada <span class="text-white font-bold">{{ $todayAttendances->filter(fn($a) => $a->check_in)->count() }} karyawan</span> yang sudah hadir.
+                    </p>
+                </div>
+                
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
+                <div class="absolute bottom-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full translate-y-1/3 translate-x-1/4 blur-2xl"></div>
+                <i class="fa-solid fa-rocket absolute right-12 bottom-8 text-8xl text-white/5 -rotate-12"></i>
+            </div>
+
             <!-- ── TOP STAT CARDS ─────────────────────────────────────────── -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
 
@@ -98,7 +122,8 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="{{ route('employee.edit') }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-full transition">
+                            style="background-color: #282939"
+                            class="inline-flex items-center gap-2 px-4 py-2 hover:opacity-90 text-white text-sm font-bold rounded-full transition">
                             <i class="fa-solid fa-plus"></i> Add Employee
                         </a>
                         <a href="{{ route('employee.index') }}"
@@ -108,63 +133,76 @@
                     </div>
                 </div>
 
-                <!-- Table -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr class="text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
-                                <th class="px-6 py-3 text-left">Name</th>
-                                <th class="px-6 py-3 text-left">Position</th>
-                                <th class="px-6 py-3 text-left">Check-in</th>
-                                <th class="px-6 py-3 text-left">Check-out</th>
-                                <th class="px-6 py-3 text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50">
-                            @forelse($todayAttendances as $att)
-                                @php
-                                    $late    = $att->check_in && $att->check_in > '09:00:00';
-                                    $hasOut  = !is_null($att->check_out);
-                                    $status  = $late ? 'Late Check-In' : ($hasOut ? 'Punctual' : 'On Shift');
-                                    $badgeCls = $late
-                                        ? 'bg-yellow-100 text-yellow-700'
-                                        : ($hasOut ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-600');
-                                @endphp
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm shrink-0">
-                                                {{ strtoupper(substr($att->employee->name ?? '?', 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <p class="font-semibold text-gray-800 text-sm">{{ $att->employee->name ?? '-' }}</p>
-                                                <p class="text-xs text-gray-400">{{ $att->employee->nik ?? '' }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $att->employee->position ?? '-' }}</td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-700">
-                                        {{ $att->check_in ? \Carbon\Carbon::parse($att->check_in)->format('h:i A') : '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-700">
-                                        {{ $att->check_out ? \Carbon\Carbon::parse($att->check_out)->format('h:i A') : '-' }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold {{ $badgeCls }}">
-                                            {{ $status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-16 text-center">
-                                        <i class="fa-solid fa-calendar-xmark text-gray-300 text-4xl mb-3"></i>
-                                        <p class="text-gray-400 text-sm">No attendance records for today yet.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                {{-- Styled Attendance List (Stacked List inspired) --}}
+                <div class="p-6">
+                    <div class="space-y-1">
+                        @forelse($todayAttendances as $att)
+                            @php
+                                $late    = $att->check_in && $att->check_in > '09:00:00';
+                                $hasOut  = !is_null($att->check_out);
+                                $status  = $late ? 'Terlambat' : ($hasOut ? 'Selesai' : 'Sedang Bekerja');
+                                
+                                $statusStyle = $late 
+                                    ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                                    : ($hasOut ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200');
+                                $icon = $late ? 'fa-clock' : ($hasOut ? 'fa-check-double' : 'fa-briefcase');
+                            @endphp
+                            
+                            <div class="flex items-center group py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-all px-2 rounded-2xl">
+                                {{-- Avatar with Presence --}}
+                                <div class="relative mr-4 shrink-0">
+                                    <div class="w-12 h-12 rounded-full ring-2 ring-white shadow-sm flex items-center justify-center text-white font-bold text-lg bg-gradient-to-br from-indigo-500 to-blue-400">
+                                        {{ strtoupper(substr($att->employee->name ?? '?', 0, 1)) }}
+                                    </div>
+                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                        <div class="w-2 h-2 {{ $att->check_in ? 'bg-green-500' : 'bg-gray-300' }} rounded-full"></div>
+                                    </div>
+                                </div>
+
+                                {{-- Employee Info --}}
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-base font-semibold text-gray-800 tracking-tight leading-none mb-1.5 truncate">
+                                        {{ $att->employee->name ?? 'Unknown' }}
+                                    </h3>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        {{ $att->employee->position ?? 'Staff' }} • {{ $att->employee->nik ?? '-' }}
+                                    </p>
+                                </div>
+
+                                {{-- Check-In/Out Times --}}
+                                <div class="hidden md:flex items-center gap-8 mr-12 text-center">
+                                    <div>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Masuk</p>
+                                        <p class="text-sm font-bold text-gray-700">
+                                            {{ $att->check_in ? \Carbon\Carbon::parse($att->check_in)->format('H:i') : '--:--' }}
+                                        </p>
+                                    </div>
+                                    <div class="w-px h-6 bg-gray-100"></div>
+                                    <div>
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Keluar</p>
+                                        <p class="text-sm font-bold text-gray-700">
+                                            {{ $att->check_out ? \Carbon\Carbon::parse($att->check_out)->format('H:i') : '--:--' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- Status Badge --}}
+                                <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border {{ $statusStyle }} transition-transform group-hover:scale-105">
+                                    <i class="fa-solid {{ $icon }} text-[10px]"></i>
+                                    <span class="text-[11px] font-bold tracking-tight uppercase whitespace-nowrap">
+                                        {{ $status }}
+                                    </span>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="py-16 text-center flex flex-col items-center gap-3">
+                                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fa-solid fa-calendar-xmark text-gray-200 text-3xl"></i>
+                                </div>
+                                <p class="text-gray-400 font-medium">Belum ada aktivitas absensi hari ini.</p>
+                            </div>
+                        @endforelse
+                    </div>
                 </div>
             </div>
 
@@ -177,13 +215,23 @@
                 <!-- LEFT SECTION: QUICK CHECK (Attendance) -->
                 <div class="lg:w-1/3">
                     <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-                        <div class="bg-indigo-700 p-4 text-white font-bold text-lg">
+                        <div style="background-color: #282939" class="p-4 text-white font-bold text-lg">
                             Quick Check
                         </div>
                         <div class="p-8 text-center">
                             @if (session()->has('message'))
-                                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm font-bold">
-                                    {{ session('message') }}
+                                <div class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm font-bold border border-green-200">
+                                    <i class="fa-solid fa-check-circle mr-1"></i> {{ session('message') }}
+                                </div>
+                            @endif
+                            @if (session()->has('error'))
+                                <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm font-bold border border-red-200">
+                                    <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ session('error') }}
+                                </div>
+                            @endif
+                            @if (session()->has('info'))
+                                <div class="mb-4 p-3 bg-blue-100 text-blue-700 rounded-lg text-sm font-bold border border-blue-200">
+                                    <i class="fa-solid fa-circle-info mr-1"></i> {{ session('info') }}
                                 </div>
                             @endif
 
@@ -194,15 +242,29 @@
 
                             <div class="flex flex-col gap-4">
                                 @if(!$todayAttendance || !$todayAttendance->check_in)
-                                    <button wire:click="checkIn" class="w-full py-4 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-bold transition flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-clock"></i> Check In
+                                    <button wire:click="checkIn" wire:loading.attr="disabled" wire:target="checkIn" 
+                                        style="background-color: #282939"
+                                        class="w-full py-4 hover:opacity-90 disabled:opacity-50 text-white rounded-xl font-bold transition flex items-center justify-center gap-2">
+                                        <span wire:loading.remove wire:target="checkIn">
+                                            <i class="fa-solid fa-clock"></i> Check In
+                                        </span>
+                                        <span wire:loading wire:target="checkIn">
+                                            <i class="fa-solid fa-spinner fa-spin"></i> Processing...
+                                        </span>
                                     </button>
                                 @elseif(!$todayAttendance->check_out)
                                     <div class="mb-2 text-sm text-green-600 font-bold">
                                         <i class="fa-solid fa-check-circle"></i> Checked In at {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('H:i') }}
                                     </div>
-                                    <button wire:click="checkOut" class="w-full py-4 bg-white border-2 border-indigo-700 text-indigo-700 hover:bg-indigo-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-clock-rotate-left"></i> Check Out
+                                    <button wire:click="checkOut" wire:loading.attr="disabled" wire:target="checkOut" 
+                                        style="border-color: #282939; color: #282939"
+                                        class="w-full py-4 bg-white border-2 hover:bg-gray-50 disabled:opacity-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                                        <span wire:loading.remove wire:target="checkOut">
+                                            <i class="fa-solid fa-clock-rotate-left"></i> Check Out
+                                        </span>
+                                        <span wire:loading wire:target="checkOut">
+                                            <i class="fa-solid fa-spinner fa-spin"></i> Processing...
+                                        </span>
                                     </button>
                                 @else
                                     <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
@@ -281,7 +343,7 @@
                     <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-xl font-bold text-gray-800">Yearly Summary</h3>
-                            <button class="px-4 py-2 bg-indigo-900 text-white rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-black transition">
+                            <button style="background-color: #282939" class="px-4 py-2 hover:opacity-90 text-white rounded-lg font-bold text-sm flex items-center gap-2 transition">
                                 Annual Statement <i class="fa-solid fa-file-pdf"></i>
                             </button>
                         </div>

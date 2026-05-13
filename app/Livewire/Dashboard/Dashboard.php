@@ -16,7 +16,10 @@ class Dashboard extends Component
     public function checkIn()
     {
         $employee = Employee::where('user_id', Auth::id())->first();
-        if (!$employee) return;
+        if (!$employee) {
+            session()->flash('error', 'Data karyawan tidak ditemukan. Silakan hubungi admin.');
+            return;
+        }
 
         $this->todayAttendance = Attendance::firstOrCreate(
             ['employee_id' => $employee->id, 'date' => date('Y-m-d')],
@@ -29,16 +32,25 @@ class Dashboard extends Component
     public function checkOut()
     {
         $employee = Employee::where('user_id', Auth::id())->first();
-        if (!$employee) return;
+        if (!$employee) {
+            session()->flash('error', 'Data karyawan tidak ditemukan.');
+            return;
+        }
 
         $attendance = Attendance::where('employee_id', $employee->id)
             ->where('date', date('Y-m-d'))
             ->first();
 
         if ($attendance) {
+            if ($attendance->check_out) {
+                session()->flash('info', 'Anda sudah melakukan Check Out hari ini.');
+                return;
+            }
             $attendance->update(['check_out' => date('H:i:s')]);
             $this->todayAttendance = $attendance;
             session()->flash('message', 'Berhasil Check Out pada ' . date('H:i:s'));
+        } else {
+            session()->flash('error', 'Anda belum melakukan Check In hari ini.');
         }
     }
 

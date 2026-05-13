@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::middleware('guest')->group(function () {
-    Volt::route('register', 'pages.auth.register')
-        ->name('register');
+    // Registration disabled: accounts are created by admin only
+    // Volt::route('register', 'pages.auth.register')
+    //     ->name('register');
 
     Volt::route('login', 'pages.auth.login')
         ->name('login');
