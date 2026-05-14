@@ -95,7 +95,7 @@
 <body class="antialiased overflow-x-hidden bg-yellow-50">
 
     <!-- ═══════════════ HERO SECTION ═══════════════ -->
-    <section class="relative min-h-screen flex flex-col overflow-hidden bg-black">
+    <section class="relative min-h-[95vh] flex flex-col overflow-hidden bg-black mx-4 mt-4 rounded-[60px] md:rounded-[80px] shadow-2xl">
         
         <!-- Video Background Zoomed In -->
         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 scale-[1.35]">
@@ -105,11 +105,10 @@
         <!-- Dark overlay gradient -->
         <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a2e]/60 via-[#0a0a2e]/30 to-[#0a0a2e]/80 z-10"></div>
 
-        <!-- Animated cloud images removed -->
-
         <!-- ── NAVBAR ── -->
         <nav class="relative z-20 w-full px-6 lg:px-16 py-6 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-3 min-w-[200px]">
                 <img src="{{ asset('images/logo-star.jpg') }}" alt="PayRoll Logo" class="w-10 h-10 rounded-full shadow-md">
                 <div class="flex flex-col">
                     <span class="text-white font-extrabold text-xl tracking-tight leading-none">PayRoll.exe</span>
@@ -117,13 +116,15 @@
                 </div>
             </div>
 
-            <div class="hidden md:flex items-center gap-8 text-white/80 text-sm font-medium">
-                <a href="#features" class="hover:text-white">Fitur</a>
-                <a href="#how" class="hover:text-white">Cara Kerja</a>
-                <a href="#pricing" class="hover:text-white">Harga</a>
+            <!-- Center: Links (Perfectly Centered) -->
+            <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 text-white/80 text-sm font-medium">
+                <a href="#features" class="hover:text-white transition-colors">Fitur</a>
+                <a href="#how" class="hover:text-white transition-colors">Cara Kerja</a>
+                <a href="#pricing" class="hover:text-white transition-colors">Harga</a>
             </div>
 
-            <div class="flex items-center gap-3">
+            <!-- Right: Auth Buttons -->
+            <div class="flex items-center justify-end gap-3 min-w-[200px]">
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}"
@@ -198,16 +199,10 @@
                 </div>
             </div>
         </div>
-
-        <!-- Bottom wave -->
-        <div class="absolute bottom-0 left-0 right-0 z-10">
-            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            </svg>
-        </div>
     </section>
 
     <!-- ═══════════════ FEATURE CARDS ═══════════════ -->
-    <section id="features" class="py-24 px-6 mx-4 mt-12 lg:px-16 relative overflow-hidden rounded-[90px]">
+    <section id="features" class="py-24 px-6 lg:px-16 relative overflow-hidden">
         <!-- Cloud sky background image -->
         <img src="{{ asset('images/cloud-bg.png') }}" alt="img Awan" class="absolute inset-0 w-full h-full object-cover " >
 
