@@ -95,7 +95,7 @@
 <body class="antialiased overflow-x-hidden bg-yellow-50">
 
     <!-- ═══════════════ HERO SECTION ═══════════════ -->
-    <section class="relative min-h-[95vh] flex flex-col overflow-hidden bg-black mx-4 mt-4 rounded-[60px] md:rounded-[80px] shadow-2xl">
+    <section class="relative min-h-screen flex flex-col overflow-hidden bg-black rounded-b-[60px] md:rounded-b-[100px]">
         
         <!-- Video Background Zoomed In -->
         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 scale-[1.35]">
@@ -202,7 +202,7 @@
     </section>
 
     <!-- ═══════════════ FEATURE CARDS ═══════════════ -->
-    <section id="features" class="py-24 px-6 lg:px-16 relative overflow-hidden">
+    <section id="features" class="py-24 px-6 mx-4 mt-12 lg:px-16 relative overflow-hidden rounded-[60px] md:rounded-[100px]">
         <!-- Cloud sky background image -->
         <img src="{{ asset('images/cloud-bg.png') }}" alt="img Awan" class="absolute inset-0 w-full h-full object-cover " >
 
