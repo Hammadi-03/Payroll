@@ -18,9 +18,9 @@ Route::view('profile', 'profile')
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Only
     Route::middleware(['role:admin'])->group(function () {
-        Route::view('employee', 'livewire.employee.index')->name('employee.index');
         Route::get('editkaryawan', \App\Livewire\Employee\EmployeeManager::class)->name('employee.edit');
         Route::get('/payroll', \App\Livewire\Calculator\PayrollCalculator::class)->name('payroll.calculator');
+        Route::get('/employee-dashboard', \App\Livewire\Dashboard\Dashboard::class)->name('employee.index');
     });
 
     // Both Admin and User

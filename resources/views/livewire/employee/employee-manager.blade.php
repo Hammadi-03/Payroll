@@ -307,89 +307,110 @@
                     </div>
                 </div>
 
-                {{-- Stacked List Style --}}
-                <div class="p-6">
-                    <div class="space-y-1">
-                        @forelse($employees as $item)
-                            <div class="flex items-center group py-4 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors px-2 rounded-xl">
-                                {{-- Avatar with Online Indicator --}}
-                                <div class="relative mr-4 shrink-0">
-                                    <div class="w-12 h-12 rounded-full ring-2 ring-white shadow-sm flex items-center justify-center text-white font-bold text-lg bg-gradient-to-br from-indigo-500 to-blue-400 grayscale-[0.1] group-hover:grayscale-0 transition-all duration-300">
-                                        {{ strtoupper(substr($item->name, 0, 1)) }}
-                                    </div>
-                                    @if($item->user)
-                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    </div>
-                                    @endif
-                                </div>
-
-                                {{-- Details --}}
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="text-base font-semibold text-gray-800 tracking-tight leading-none mb-1.5 truncate">
-                                        {{ $item->name }}
-                                    </h3>
-                                    <div class="flex items-center gap-1.5 opacity-80">
-                                        @if($item->user)
-                                            <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                                            <p class="text-sm font-medium leading-none text-green-600">
-                                                Aktif • {{ $item->user->email }}
-                                            </p>
-                                        @else
-                                            <div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div>
-                                            <p class="text-sm font-medium leading-none text-gray-400">
-                                                Tanpa Akun
-                                            </p>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                {{-- Role Badge & Department --}}
-                                <div class="shrink-0 flex items-center gap-4 mr-6">
-                                    <div class="flex flex-col items-end">
-                                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-[#F0F7FF] text-[#004085] border-[#B8DAFF] shrink-0">
-                                            <i class="fa-solid fa-briefcase text-[10px]"></i>
-                                            <span class="text-[11px] font-bold tracking-tight uppercase whitespace-nowrap truncate">
-                                                {{ $item->position ?: 'Staff' }}
-                                            </span>
+                {{-- Styled Employee Table (Ruixen inspired) --}}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border-separate border-spacing-0">
+                        <thead class="sticky top-0 z-10 bg-gray-50/50 backdrop-blur-xl">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Profil Karyawan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Status Akun</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Jabatan & Dept</th>
+                                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            @forelse($employees as $item)
+                                <tr class="hover:bg-gray-50/50 transition-colors group">
+                                    <td class="px-6 py-5 border-b border-gray-50">
+                                        <div class="flex items-center">
+                                            <div class="relative mr-4 shrink-0">
+                                                <div class="w-10 h-10 rounded-full ring-2 ring-white shadow-sm flex items-center justify-center text-white font-bold text-sm bg-gradient-to-br from-indigo-500 to-blue-400 grayscale-[0.1] group-hover:grayscale-0 transition-all duration-300">
+                                                    {{ strtoupper(substr($item->name, 0, 1)) }}
+                                                </div>
+                                                @if($item->user)
+                                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-sm font-bold text-gray-800 tracking-tight mb-0.5 truncate">
+                                                    {{ $item->name }}
+                                                </h3>
+                                                <p class="text-xs font-medium text-gray-400">
+                                                    {{ $item->nik ?: '-' }}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <p class="text-xs text-gray-400 mt-1 mr-1">{{ $item->department ?: 'N/A' }}</p>
-                                    </div>
-                                </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 border-b border-gray-50">
+                                        <div class="flex items-center gap-1.5 opacity-80">
+                                            @if($item->user)
+                                                <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                                                <p class="text-xs font-bold text-green-600">
+                                                    Aktif <span class="font-medium text-gray-400 ml-1">• {{ $item->user->email }}</span>
+                                                </p>
+                                            @else
+                                                <div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div>
+                                                <p class="text-xs font-bold text-gray-400">
+                                                    Tanpa Akun
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 border-b border-gray-50">
+                                        <div class="flex flex-col items-start">
+                                            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border bg-[#F0F7FF] text-[#004085] border-[#B8DAFF] shrink-0 mb-1">
+                                                <i class="fa-solid fa-briefcase text-[10px]"></i>
+                                                <span class="text-[11px] font-bold tracking-tight uppercase whitespace-nowrap truncate">
+                                                    {{ $item->position ?: 'Staff' }}
+                                                </span>
+                                            </div>
+                                            <p class="text-xs font-medium text-gray-500 ml-1">{{ $item->department ?: 'N/A' }}</p>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 text-right border-b border-gray-50">
+                                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                            {{-- Edit --}}
+                                            <button wire:click="edit({{ $item->id }})" title="Edit Karyawan" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100 text-[#282939] transition shadow-sm border border-gray-100">
+                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            </button>
 
-                                {{-- Actions --}}
-                                <div class="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-2">
-                                    {{-- Edit --}}
-                                    <button wire:click="edit({{ $item->id }})" title="Edit Karyawan" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100 text-[#282939] transition shadow-sm border border-gray-100">
-                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
-                                    </button>
+                                            {{-- Reset Password --}}
+                                            @if($item->user)
+                                            <button wire:click="resetPassword({{ $item->id }})" wire:loading.attr="disabled" wire:confirm="Reset password karyawan ini?" title="Reset Password" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100 text-[#282939] transition shadow-sm border border-gray-100">
+                                                <span wire:loading.remove wire:target="resetPassword({{ $item->id }})">
+                                                    <i class="fa-solid fa-key text-xs"></i>
+                                                </span>
+                                                <span wire:loading wire:target="resetPassword({{ $item->id }})">
+                                                    <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+                                                </span>
+                                            </button>
+                                            @endif
 
-                                    {{-- Reset Password --}}
-                                    @if($item->user)
-                                    <button wire:click="resetPassword({{ $item->id }})" wire:loading.attr="disabled" wire:confirm="Reset password karyawan ini?" title="Reset Password" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100 text-[#282939] transition shadow-sm border border-gray-100">
-                                        <span wire:loading.remove wire:target="resetPassword({{ $item->id }})">
-                                            <i class="fa-solid fa-key text-xs"></i>
-                                        </span>
-                                        <span wire:loading wire:target="resetPassword({{ $item->id }})">
-                                            <i class="fa-solid fa-spinner fa-spin text-xs"></i>
-                                        </span>
-                                    </button>
-                                    @endif
-
-                                    {{-- Delete --}}
-                                    <button wire:click="delete({{ $item->id }})" wire:confirm="Yakin hapus karyawan ini?" title="Hapus" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition shadow-sm border border-red-100">
-                                        <i class="fa-solid fa-trash text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="py-16 text-center flex flex-col items-center gap-2 text-gray-400">
-                                <i class="fa-solid fa-users-slash text-4xl text-gray-200"></i>
-                                <p class="text-sm font-medium">Belum ada karyawan terdaftar</p>
-                                <p class="text-xs">Tambahkan karyawan pertama menggunakan form di sebelah kiri</p>
-                            </div>
-                        @endforelse
-                    </div>
+                                            {{-- Delete --}}
+                                            <button wire:click="delete({{ $item->id }})" wire:confirm="Yakin hapus karyawan ini?" title="Hapus" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition shadow-sm border border-red-100">
+                                                <i class="fa-solid fa-trash text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-16 text-center">
+                                        <div class="flex flex-col items-center gap-2 text-gray-400">
+                                            <i class="fa-solid fa-users-slash text-4xl text-gray-200"></i>
+                                            <p class="text-sm font-medium">Belum ada karyawan terdaftar</p>
+                                            <p class="text-xs">Tambahkan karyawan pertama menggunakan form di sebelah kiri</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
             </div>

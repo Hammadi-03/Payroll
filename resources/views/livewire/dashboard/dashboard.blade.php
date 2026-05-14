@@ -4,7 +4,7 @@
         <div class="min-h-screen bg-gray-50 px-6 py-8">
 
             <!-- ── WELCOME CARD ─────────────────────────────────────────── -->
-            <div class="mb-8 p-8 rounded-[2.5rem] bg-[#282939] text-white overflow-hidden relative shadow-2xl">
+            <div class="mb-8 p-8 rounded-[2.5rem] bg-[#282939] text-white overflow-hidden relative ">
                 <div class="relative z-10">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-bold uppercase tracking-widest text-indigo-200">
@@ -31,7 +31,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
 
                 <!-- Card 1: Avg Check-In / Check-Out -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 col-span-1 lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-sm border border-black p-6 col-span-1 lg:col-span-1">
                     <div class="flex items-center gap-2 text-gray-500 text-sm font-medium mb-1">
                         <i class="fa-regular fa-clock text-indigo-500"></i>
                         Average Check-In / Out Time
@@ -57,7 +57,7 @@
                 </div>
 
                 <!-- Card 2: On-Time Rate -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="bg-white rounded-2xl shadow-sm border  border-black p-6">
                     <div class="flex items-center gap-2 text-gray-500 text-sm font-medium mb-1">
                         <i class="fa-solid fa-circle-check text-green-500"></i>
                         On-Time Rate
@@ -112,7 +112,7 @@
             </div>
 
             <!-- ── ATTENDANCE HISTORY TABLE ────────────────────────────────── -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-black overflow-hidden">
                 <!-- Table Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-5 border-b border-gray-100">
                     <div class="flex items-center gap-2">
@@ -133,76 +133,87 @@
                     </div>
                 </div>
 
-                {{-- Styled Attendance List (Stacked List inspired) --}}
-                <div class="p-6">
-                    <div class="space-y-1">
-                        @forelse($todayAttendances as $att)
-                            @php
-                                $late    = $att->check_in && $att->check_in > '09:00:00';
-                                $hasOut  = !is_null($att->check_out);
-                                $status  = $late ? 'Terlambat' : ($hasOut ? 'Selesai' : 'Sedang Bekerja');
+                {{-- Styled Attendance Table (Ruixen inspired) --}}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border-separate border-spacing-0">
+                        <thead class="sticky top-0 z-10 bg-gray-50/50 backdrop-blur-xl">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Karyawan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Masuk</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Keluar</th>
+                                <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            @forelse($todayAttendances as $att)
+                                @php
+                                    $late    = $att->check_in && $att->check_in > '09:00:00';
+                                    $hasOut  = !is_null($att->check_out);
+                                    $status  = $late ? 'Terlambat' : ($hasOut ? 'Selesai' : 'Sedang Bekerja');
+                                    
+                                    $statusStyle = $late 
+                                        ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                                        : ($hasOut ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200');
+                                    $icon = $late ? 'fa-clock' : ($hasOut ? 'fa-check-double' : 'fa-briefcase');
+                                @endphp
                                 
-                                $statusStyle = $late 
-                                    ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                                    : ($hasOut ? 'bg-green-50 text-green-700 border-green-200' : 'bg-blue-50 text-blue-700 border-blue-200');
-                                $icon = $late ? 'fa-clock' : ($hasOut ? 'fa-check-double' : 'fa-briefcase');
-                            @endphp
-                            
-                            <div class="flex items-center group py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-all px-2 rounded-2xl">
-                                {{-- Avatar with Presence --}}
-                                <div class="relative mr-4 shrink-0">
-                                    <div class="w-12 h-12 rounded-full ring-2 ring-white shadow-sm flex items-center justify-center text-white font-bold text-lg bg-gradient-to-br from-indigo-500 to-blue-400">
-                                        {{ strtoupper(substr($att->employee->name ?? '?', 0, 1)) }}
-                                    </div>
-                                    <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                        <div class="w-2 h-2 {{ $att->check_in ? 'bg-green-500' : 'bg-gray-300' }} rounded-full"></div>
-                                    </div>
-                                </div>
-
-                                {{-- Employee Info --}}
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="text-base font-semibold text-gray-800 tracking-tight leading-none mb-1.5 truncate">
-                                        {{ $att->employee->name ?? 'Unknown' }}
-                                    </h3>
-                                    <p class="text-xs font-medium text-gray-400">
-                                        {{ $att->employee->position ?? 'Staff' }} • {{ $att->employee->nik ?? '-' }}
-                                    </p>
-                                </div>
-
-                                {{-- Check-In/Out Times --}}
-                                <div class="hidden md:flex items-center gap-8 mr-12 text-center">
-                                    <div>
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Masuk</p>
+                                <tr class="hover:bg-gray-50/50 transition-colors group">
+                                    <td class="px-6 py-5 border-b border-gray-50">
+                                        <div class="flex items-center">
+                                            <div class="relative mr-4 shrink-0">
+                                                <div class="w-10 h-10 rounded-full ring-2 ring-white shadow-sm flex items-center justify-center text-white font-bold text-sm bg-gradient-to-br from-indigo-500 to-blue-400">
+                                                    {{ strtoupper(substr($att->employee->name ?? '?', 0, 1)) }}
+                                                </div>
+                                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                                    <div class="w-2 h-2 {{ $att->check_in ? 'bg-green-500' : 'bg-gray-300' }} rounded-full"></div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-sm font-bold text-gray-800 tracking-tight mb-0.5 truncate">
+                                                    {{ $att->employee->name ?? 'Unknown' }}
+                                                </h3>
+                                                <p class="text-xs font-medium text-gray-400">
+                                                    {{ $att->employee->position ?? 'Staff' }} • {{ $att->employee->nik ?? '-' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 border-b border-gray-50">
                                         <p class="text-sm font-bold text-gray-700">
                                             {{ $att->check_in ? \Carbon\Carbon::parse($att->check_in)->format('H:i') : '--:--' }}
                                         </p>
-                                    </div>
-                                    <div class="w-px h-6 bg-gray-100"></div>
-                                    <div>
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Keluar</p>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 border-b border-gray-50">
                                         <p class="text-sm font-bold text-gray-700">
                                             {{ $att->check_out ? \Carbon\Carbon::parse($att->check_out)->format('H:i') : '--:--' }}
                                         </p>
-                                    </div>
-                                </div>
-
-                                {{-- Status Badge --}}
-                                <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border {{ $statusStyle }} transition-transform group-hover:scale-105">
-                                    <i class="fa-solid {{ $icon }} text-[10px]"></i>
-                                    <span class="text-[11px] font-bold tracking-tight uppercase whitespace-nowrap">
-                                        {{ $status }}
-                                    </span>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="py-16 text-center flex flex-col items-center gap-3">
-                                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fa-solid fa-calendar-xmark text-gray-200 text-3xl"></i>
-                                </div>
-                                <p class="text-gray-400 font-medium">Belum ada aktivitas absensi hari ini.</p>
-                            </div>
-                        @endforelse
-                    </div>
+                                    </td>
+                                    
+                                    <td class="px-6 py-5 text-right border-b border-gray-50">
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border {{ $statusStyle }} transition-transform group-hover:scale-105">
+                                            <i class="fa-solid {{ $icon }} text-[10px]"></i>
+                                            <span class="text-[11px] font-bold tracking-tight uppercase whitespace-nowrap">
+                                                {{ $status }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-16 text-center">
+                                        <div class="flex flex-col items-center gap-3">
+                                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-2">
+                                                <i class="fa-solid fa-calendar-xmark text-gray-200 text-3xl"></i>
+                                            </div>
+                                            <p class="text-gray-400 font-medium">Belum ada aktivitas absensi hari ini.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -310,25 +321,26 @@
                             </div>
                         @else
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left">
+                                <table class="w-full border-separate border-spacing-0">
                                     <thead>
-                                        <tr class="text-gray-400 text-sm font-medium border-b border-gray-50">
-                                            <th class="pb-4 font-medium">Month</th>
-                                            <th class="pb-4 font-medium">Gross Pay</th>
-                                            <th class="pb-4 font-medium">Deductions</th>
-                                            <th class="pb-4 text-center font-medium">Payslip</th>
+                                        <tr class="bg-gray-50/50 backdrop-blur-xl">
+                                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">Month</th>
+                                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">Gross Pay</th>
+                                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">Deductions</th>
+                                            <th class="px-4 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">Payslip</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-50">
                                         @foreach($payHistory as $pay)
-                                            <tr class="hover:bg-gray-50 transition">
-                                                <td class="py-4 font-bold text-gray-700">{{ $pay->month_year }} |</td>
-                                                <td class="py-4 text-gray-600">Rp {{ number_format($pay->basic_salary + $pay->allowance, 0, ',', '.') }}</td>
-                                                <td class="py-4 text-gray-600">Rp {{ number_format($pay->deduction, 0, ',', '.') }}</td>
-                                                <td class="py-4 text-center">
-                                                    <a href="{{ route('payroll.cetak', $pay->id) }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition flex items-center justify-center gap-1">
-                                                        <i class="fa-solid fa-file-pdf text-xl"></i>
-                                                        <i class="fa-solid fa-arrow-right-long text-xs"></i>
+                                            <tr class="hover:bg-gray-50/50 transition-colors group">
+                                                <td class="px-4 py-4 font-bold text-gray-700 border-b border-gray-50">{{ $pay->month_year }}</td>
+                                                <td class="px-4 py-4 text-gray-600 border-b border-gray-50">Rp {{ number_format($pay->basic_salary + $pay->allowance, 0, ',', '.') }}</td>
+                                                <td class="px-4 py-4 text-red-500 border-b border-gray-50">- Rp {{ number_format($pay->deduction, 0, ',', '.') }}</td>
+                                                <td class="px-4 py-4 text-center border-b border-gray-50">
+                                                    <a href="{{ route('payroll.cetak', $pay->id) }}" target="_blank"
+                                                        style="background-color: #282939"
+                                                        class="inline-flex items-center gap-2 px-4 py-1.5 hover:opacity-90 text-white text-[10px] font-bold rounded-full shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
+                                                        <i class="fa-solid fa-file-pdf"></i> View PDF
                                                     </a>
                                                 </td>
                                             </tr>

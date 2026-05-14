@@ -16,120 +16,56 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+<div>
+<!-- Mobile Top Bar -->
+<div class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between"
+     x-data="{ mobileOpen: false }">
+    <div class="flex items-center gap-2">
+        <img src="{{ asset('images/Frame 33860.jpg') }}" alt="logo" style="width: 90px;">   
+    </div>
+    <button @click="mobileOpen = !mobileOpen" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+        <i x-show="!mobileOpen" class="fa-solid fa-bars text-gray-600"></i>
+        <i x-show="mobileOpen" class="fa-solid fa-xmark text-gray-600" x-cloak></i>
+    </button>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        <i class="fa-solid fa-house me-1"></i> {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <!-- Navigation Karyawan -->
-                    @if(auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('employee.index')" :active="request()->routeIs('employee.index')" wire:navigate>
-                            <i class="fa-solid fa-user-group me-1"></i> {{ __('Karyawan') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('employee.edit')" :active="request()->routeIs('employee.edit')" wire:navigate>
-                            <i class="fa-solid fa-user-gear me-1"></i> {{ __('Kelola Karyawan') }}
-                        </x-nav-link>
-                        <!-- Navigation Kalkulator Penggajian -->
-                        <x-nav-link :href="route('payroll.calculator')" :active="request()->routeIs('payroll.calculator')" wire:navigate>
-                            <i class="fa-solid fa-calculator me-1"></i> {{ __('Kalkulator Penggajian') }}
-                        </x-nav-link>
-                    @endif
-                    <!-- Navigation Riwayat Gaji (Admin) -->
-                    @if(auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('payroll.history')" :active="request()->routeIs('payroll.history')" wire:navigate>
-                            <i class="fa-solid fa-list-check me-1"></i> {{ __('Semua Riwayat Gaji') }}
-                        </x-nav-link>
-                    @endif
-                    <!-- Navigation Slip Gaji Saya (User/Personal only) -->
-                    @if(auth()->user()->role !== 'admin')
-                        <x-nav-link :href="route('my.payslips')" :active="request()->routeIs('my.payslips')" wire:navigate>
-                            <i class="fa-solid fa-file-invoice-dollar me-1"></i> {{ __('Slip Gaji Saya') }}
-                        </x-nav-link>
-                    @endif
-                </div>
-            </div>
+    <!-- Mobile Slide-over -->
+    <div x-show="mobileOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+         class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 flex flex-col pt-16" x-cloak>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+            @include('livewire.layout.partials.sidebar-links')
+        </div>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </button>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+        <div class="px-4 py-4 border-t border-gray-100">
+            @include('livewire.layout.partials.sidebar-user')
         </div>
     </div>
+    <div x-show="mobileOpen" @click="mobileOpen = false" class="fixed inset-0 bg-black/30 z-40" x-cloak></div>
+</div>
+<div class="lg:hidden h-14"></div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+<!-- Desktop Sidebar -->
+<aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-white border-r border-gray-200 z-40">
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+    <!-- Logo -->
+    <div class="px-6 py-6 border-b border-gray-100">
+        <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-3">
+            <img src="{{ asset('images/Frame 33860.jpg') }}" alt="logo" style="width: 90px;">   
+            <div>
+                <span class="font-extrabold text-gray-800 text-xl tracking-tight">Pay<span class="text-indigo-500">Roll</span></span>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest -mt-0.5">Dashboard</p>
             </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </button>
-            </div>
-        </div>
+        </a>
     </div>
-</nav>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+        @include('livewire.layout.partials.sidebar-links')
+    </nav>
+
+    <!-- User Section -->
+    <div class="px-4 py-4 border-t border-gray-100">
+        @include('livewire.layout.partials.sidebar-user')
+    </div>
+</aside>
+</div>

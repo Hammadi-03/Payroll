@@ -30,7 +30,7 @@
     @else
     {{-- Staff: show their own identity card --}}
     @if($employees->first())
-    <div class="bg-gradient-to-r from-indigo-950 to-blue-900 rounded-md p-5 mb-6 text-white flex items-center gap-4 shadow-sm">
+    <div class="bg-[#282939] rounded-md p-5 mb-6 text-white flex items-center gap-4 shadow-sm">
         <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-bold text-xl">
             {{ strtoupper(substr($employees->first()->name, 0, 1)) }}
         </div>
@@ -76,36 +76,33 @@
                     {{ $payrolls->count() }} Slip Gaji Ditemukan
                 </h2>
                 @if(!$isAdmin)
-                <span class="text-xs text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full font-semibold">
-                    <i class="fa-solid fa-lock mr-1"></i> Hanya data Anda
-                </span>
                 @endif
             </div>
 
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-100">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full border-separate border-spacing-0">
+                    <thead class="sticky top-0 z-10 bg-gray-50/50 backdrop-blur-xl">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Periode</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Gaji Pokok</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tunjangan</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Potongan</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Gaji Bersih</th>
-                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Unduh</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Periode</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Gaji Pokok</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Tunjangan</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Potongan</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Gaji Bersih</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">Unduh</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody class="bg-white">
                         @foreach($payrolls as $payroll)
-                        <tr class="hover:bg-indigo-50 transition-colors">
-                            <td class="px-6 py-4 font-bold text-gray-700">{{ $payroll->month_year }}</td>
-                            <td class="px-6 py-4 text-gray-600">Rp {{ number_format($payroll->basic_salary, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-gray-600">Rp {{ number_format($payroll->allowance, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-red-500">- Rp {{ number_format($payroll->deduction, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 font-extrabold text-indigo-700">Rp {{ number_format($payroll->net_salary, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-center">
+                        <tr class="hover:bg-gray-50/50 transition-colors group">
+                            <td class="px-6 py-5 font-bold text-gray-700 border-b border-gray-50">{{ $payroll->month_year }}</td>
+                            <td class="px-6 py-5 text-gray-600 border-b border-gray-50">Rp {{ number_format($payroll->basic_salary, 0, ',', '.') }}</td>
+                            <td class="px-6 py-5 text-gray-600 border-b border-gray-50">Rp {{ number_format($payroll->allowance, 0, ',', '.') }}</td>
+                            <td class="px-6 py-5 text-red-500 border-b border-gray-50">- Rp {{ number_format($payroll->deduction, 0, ',', '.') }}</td>
+                            <td class="px-6 py-5 font-extrabold text-indigo-700 border-b border-gray-50">Rp {{ number_format($payroll->net_salary, 0, ',', '.') }}</td>
+                            <td class="px-6 py-5 text-center border-b border-gray-50">
                                 <a href="{{ route('payroll.cetak', $payroll->id) }}" target="_blank"
                                     style="background-color: #282939"
-                                    class="inline-flex items-center gap-2 px-4 py-2 hover:opacity-90 text-white text-xs font-bold rounded-full shadow-sm transition-all duration-200 hover:-translate-y-0.5">
+                                    class="inline-flex items-center gap-2 px-5 py-2.5 hover:opacity-90 text-white text-xs font-bold rounded-full shadow-lg shadow-black/5 transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
                                     <i class="fa-solid fa-file-pdf"></i> Download
                                 </a>
                             </td>
